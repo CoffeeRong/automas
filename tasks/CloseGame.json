@@ -1,0 +1,59 @@
+{
+    "task": [
+        {
+            "name": "close_game",
+            "label": "关闭游戏",
+            "entry": "MaaNikki_CloseGame",
+            "group": ["posttask"],
+            "default_check": false,
+            "description": "请放在任务队列末尾。执行到本任务时，请求关闭当前连接的游戏窗口并等待游戏进程退出；游戏弹出退出确认或未能正常退出时，默认报告失败、不强制结束。前序任务失败导致队列停止时，本任务不会执行。默认不关闭官方启动器，可在选项中开启。",
+            "option": ["ForceCloseOnTimeout", "CloseLauncher"]
+        }
+    ],
+    "option": {
+        "ForceCloseOnTimeout": {
+            "type": "switch",
+            "label": "正常退出超时后强制结束",
+            "description": "关闭时，游戏 15 秒内未退出则报告失败并保留游戏。开启后，超时将强制结束当前连接的游戏进程，可能中断尚未完成的操作，请确认后再开启。",
+            "cases": [
+                {
+                    "name": "Yes",
+                    "label": "开启",
+                    "pipeline_override": {
+                        "MaaNikki_CloseGame": {"custom_action_param": {"force_on_timeout": true}}
+                    }
+                },
+                {
+                    "name": "No",
+                    "label": "关闭",
+                    "pipeline_override": {
+                        "MaaNikki_CloseGame": {"custom_action_param": {"force_on_timeout": false}}
+                    }
+                }
+            ],
+            "default_case": "No"
+        },
+        "CloseLauncher": {
+            "type": "switch",
+            "label": "同时关闭官方启动器",
+            "description": "关闭游戏后，一并请求退出官方启动器窗口；启动器仅驻留托盘时无法关闭。",
+            "cases": [
+                {
+                    "name": "Yes",
+                    "label": "开启",
+                    "pipeline_override": {
+                        "MaaNikki_CloseGame": {"custom_action_param": {"close_launcher": true}}
+                    }
+                },
+                {
+                    "name": "No",
+                    "label": "关闭",
+                    "pipeline_override": {
+                        "MaaNikki_CloseGame": {"custom_action_param": {"close_launcher": false}}
+                    }
+                }
+            ],
+            "default_case": "No"
+        }
+    }
+}
